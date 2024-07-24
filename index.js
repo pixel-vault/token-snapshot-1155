@@ -12,11 +12,12 @@ const start = async () => {
 
   const result = await getEventsData(config, provider, contract);
 
-  console.log("Calculating balances of %s (%s)", result.name, result.symbol);
+  console.log("Calculating balances of %s", contract.address);
   const balances = await createBalances(result);
+  console.log(balances);
 
   console.log("Exporting balances");
-  await exportBalances(result.symbol, balances, config, provider);
+  await exportBalances(contract.address, balances, config, provider);
 };
 
 (async () => {

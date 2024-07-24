@@ -9,7 +9,7 @@ const range = (start, end) => {
     .map((_, idx) => start + idx);
 };
 
-export const tryBlockByBlock = async (contract, start, end, symbol) => {
+export const tryBlockByBlock = async (contract, start, end) => {
   const blocks = range(start, end);
 
   let counter = 0;
@@ -24,7 +24,7 @@ export const tryBlockByBlock = async (contract, start, end, symbol) => {
       console.info("Successfully imported ", pastEvents.length, " events");
 
       const file = parameters.eventsDownloadFilePath
-        .replace(/{token}/, symbol)
+        .replace(/{token}/, contract.address)
         .replace(/{blockNumber}/, pastEvents[0].blockNumber);
       writeFile(file, pastEvents);
     }

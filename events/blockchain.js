@@ -21,10 +21,15 @@ const groupBy = (objectArray, property) => {
   }, {});
 };
 
-const tryGetEvents = async (start, end, symbol, contract) => {
+const tryGetEvents = async (start, end, contract) => {
   try {
-    const filter = contract.filters.Transfer();
-    const pastEvents = await contract.queryFilter(filter, start, end);
+    const filterSingle = contract.filters.TransferSingle();
+    const filterBatch = contract.filters.TransferBatch();
+
+    const pastEventsSingle = await contract.queryFilter(filterSingle, start, end);
+    const pastEventsBatch = await contract.queryFilter(filterBatch, start, end);
+
+    const pastEvents = pastEventsSingle.concat(pastEventsBatch);
 
     if (pastEvents.length) {
       console.info("Successfully imported ", pastEvents.length, " events");
@@ -38,29 +43,27 @@ const tryGetEvents = async (start, end, symbol, contract) => {
         const data = group[key];
 
         const file = parameters.eventsDownloadFilePath
-          .replace(/{token}/g, symbol)
+          .replace(/{token}/g, contract.address)
           .replace(/{blockNumber}/, blockNumber);
 
         writeFile(file, data);
       }
     }
   } catch (e) {
+    console.log(e);
     console.log("Could not get events due to an error. Now checking block by block.");
-    await tryBlockByBlock(contract, start, end, symbol);
+    await tryBlockByBlock(contract, start, end);
   }
 };
 
 export const getEventsData = async (config, provider, contract) => {
-  const name = await contract.name();
-  const symbol = await contract.symbol();
-  const decimals = await contract.decimals();
   const blockHeight = await provider.getBlockNumber();
   let fromBlock = parseInt(config.fromBlock) || 0;
   const blocksPerBatch = parseInt(config.blocksPerBatch) || 0;
   const delay = parseInt(config.delay) || 0;
   const toBlock = parseInt(config.toBlock) || blockHeight;
 
-  const lastDownloadedBlock = await getFiles(symbol);
+  const lastDownloadedBlock = await getFiles(contract.address);
 
   if (lastDownloadedBlock) {
     console.log("Resuming from the last downloaded block #", lastDownloadedBlock);
@@ -82,7 +85,7 @@ export const getEventsData = async (config, provider, contract) => {
 
     console.log("Batch", i + 1, " From", start, "to", end);
 
-    await tryGetEvents(start, end, symbol, contract);
+    await tryGetEvents(start, end, contract);
 
     start = end + 1;
     end = start + blocksPerBatch;
@@ -92,12 +95,9 @@ export const getEventsData = async (config, provider, contract) => {
     }
   }
 
-  const events = await getEvents(symbol);
+  const events = await getEvents(contract.address);
 
   const data = {
-    name,
-    symbol,
-    decimals,
     events: events
   };
 

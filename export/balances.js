@@ -30,6 +30,8 @@ export const createBalances = async (data) => {
     }
   };
 
+  //console.log(data.events);
+
   for (const event of data.events) {
     setDeposits(event);
     setWithdrawals(event);
@@ -44,7 +46,7 @@ export const createBalances = async (data) => {
     if (balance > 0) {
       closingBalances.push({
         wallet: key,
-        balance: (Number(balance) / 10 ** parseInt(data.decimals)).toFixed(parseInt(data.decimals)).toString()
+        balance: balance.toString()
       });
     }
   }
