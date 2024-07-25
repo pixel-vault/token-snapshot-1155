@@ -1,6 +1,7 @@
 "use strict";
 import { BigNumber } from "ethers";
 import enumerable from "linq";
+import { config } from "../config/config.js";
 
 export const createBalances = async (data) => {
   const balances = new Map();
@@ -30,11 +31,11 @@ export const createBalances = async (data) => {
     }
   };
 
-  //console.log(data.events);
-
   for (const event of data.events) {
-    setDeposits(event);
-    setWithdrawals(event);
+    if(config.ids.includes(parseInt(event.id))) {
+      setDeposits(event);
+      setWithdrawals(event);
+    }
   }
 
   for (const [key, value] of balances.entries()) {

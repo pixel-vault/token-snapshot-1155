@@ -11,10 +11,12 @@ const folderExistsAsync = promisify(exists);
 
 export const getFiles = async (symbol) => {
   const downloadFolder = parameters.eventsDownloadFolder.replace("{token}", symbol);
+  console.log(downloadFolder);
 
   if (!(await folderExistsAsync(downloadFolder))) {
     return 0;
   }
+
   const files = await readdirAsync(downloadFolder);
 
   return Enumerable.from(files)

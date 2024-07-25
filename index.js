@@ -14,7 +14,7 @@ const start = async () => {
 
   console.log("Calculating balances of %s", contract.address);
   const balances = await createBalances(result);
-  console.log(balances);
+  console.log(balances.length, "wallets with balances");
 
   console.log("Exporting balances");
   await exportBalances(contract.address, balances, config, provider);

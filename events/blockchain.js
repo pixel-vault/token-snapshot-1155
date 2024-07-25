@@ -69,12 +69,14 @@ export const getEventsData = async (config, provider, contract) => {
     console.log("Resuming from the last downloaded block #", lastDownloadedBlock);
     fromBlock = lastDownloadedBlock + 1;
   }
-
   console.log("From %d to %d", fromBlock, toBlock);
 
   let start = fromBlock;
   let end = fromBlock + blocksPerBatch;
+
   let i = 0;
+
+  console.log(end < toBlock);
 
   while (end < toBlock) {
     i++;
@@ -94,6 +96,9 @@ export const getEventsData = async (config, provider, contract) => {
       end = toBlock;
     }
   }
+
+  console.log(end);
+  console.log(toBlock);
 
   const events = await getEvents(contract.address);
 
