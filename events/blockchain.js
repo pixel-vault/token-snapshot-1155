@@ -76,8 +76,6 @@ export const getEventsData = async (config, provider, contract) => {
 
   let i = 0;
 
-  console.log(end < toBlock);
-
   while (end < toBlock) {
     i++;
 
@@ -96,9 +94,6 @@ export const getEventsData = async (config, provider, contract) => {
       end = toBlock;
     }
   }
-
-  console.log(end);
-  console.log(toBlock);
 
   const events = await getEvents(contract.address);
 

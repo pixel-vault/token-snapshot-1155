@@ -9,7 +9,7 @@ import { parameters } from "../config/parameters.js";
 const readdirAsync = promisify(readdir);
 const readFileAsync = promisify(readFile);
 
-const getMinimal = (pastEvents) => {
+const getMinimalSingle = (pastEvents) => {
   return pastEvents.map((tx) => {
     return {
       transactionHash: tx.transactionHash,
@@ -17,6 +17,18 @@ const getMinimal = (pastEvents) => {
       to: tx.args["2"],
       id: tx.args["3"].hex,
       value: tx.args["4"].hex
+    };
+  });
+};
+
+const getMinimalBatch = (pastEvents) => {
+  return pastEvents.map((tx) => {
+    return {
+      transactionHash: tx.transactionHash,
+      from: tx.args["1"],
+      to: tx.args["2"],
+      id: tx.args["3"].map(function (val) { return val.hex }),
+      value: tx.args["4"].map(function (val) { return val.hex })
     };
   });
 };
@@ -36,7 +48,13 @@ export const getEvents = async (contractAddress) => {
 
     const contents = await readFileAsync(join(directory, file));
     const parsed = JSON.parse(contents.toString());
-    events = events.concat(getMinimal(parsed));
+
+    if(parsed[0].event === "TransferBatch") {
+      events = events.concat(getMinimalBatch(parsed));
+      console.log(events)
+    } else {
+      events = events.concat(getMinimalSingle(parsed));
+    }
   }
 
   return events;
