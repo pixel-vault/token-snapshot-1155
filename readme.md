@@ -1,31 +1,16 @@
 <div align="center">
 <h1><strong> Token Snapshot </strong></h1>
-<h2>Create ERC20 Token Snapshots on any EVM chains!</h2>
-
-[![Stargazers](https://img.shields.io/github/stars/Pedrojok01/token-snapshot)](https://github.com/Pedrojok01/token-snapshot/stargazers)
-[![Issues](https://img.shields.io/github/issues/Pedrojok01/token-snapshot)](https://github.com/Pedrojok01/token-snapshot/issues)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Downloads per month](https://img.shields.io/npm/dm/token-snapshot)](https://img.shields.io/npm/dm/token-snapshot)
+<h2>Create ERC1155 Token Snapshots on any EVM chains!</h2>
 
 <br></br>
 
 </div>
 
-This command-line utility creates a snapshot of any ERC20 token in JSON or CSV format. Use your own fully synced Ethereum node or any _Ethereum node as a service_ like Infura.
+This command-line utility creates a snapshot of any ERC1155 token in JSON or CSV format. Use your own fully synced Ethereum node or any _Ethereum node as a service_ like Infura.
 
 - Works without a local Ethereum node.
 - Automatically resumes the next time upon failure.
 - Tested to work with Infura / QuickNode / Alchemy.
-
-## Important Notes
-
-This package is based on the little outdated <b>erc20-snapshot</b> package. Here is the list of the main modifications compared to the initial package:
-
-- Upgraded all dependencies to their latest version;
-- Switched from <b>[web3](https://docs.web3js.org/)</b> to <b>[ethers](https://docs.ethers.org/v5/)</b>;
-- Switched to ES6 modules;
-- Added <b>prettier</b> in addition to <b>eslint</b>;
-- Group the snapshot output files into a `result` folder for clarity;
 
 ## Getting Started
 
@@ -59,6 +44,7 @@ snapshot
   "contractAddress": "",
   "fromBlock": 0,
   "toBlock": "latest",
+  "ids": [6, 9],
   "format": "json",
   "blocksPerBatch": 2500,
   "delay": 0,
@@ -81,6 +67,10 @@ The block height to scan from. To save time, enter the block number of the trans
 ### toBlock
 
 The block height to end the scan at.
+
+### ids
+
+Array of token ids to include in the snapshot
 
 ### format
 
@@ -106,4 +96,4 @@ You will get your snapshot files in the newly created `result/balances` folder. 
 
 ## Aknowlegements
 
-> Binod Nirvan ([@binodp](https://github.com/binodnp)):<br> > https://github.com/binodnp/erc20-snapshot
+> [@Pedrojok01](https://github.com/Pedrojok01):<br> > https://github.com/Pedrojok01/token-snapshot/tree/main
